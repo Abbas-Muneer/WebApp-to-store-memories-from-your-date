@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { fetchMemories } from '../api/memories';
@@ -24,10 +24,7 @@ export default function AllDates() {
   });
 
   useEffect(() => {
-    if (isFirstRun.current) {
-      isFirstRun.current = false;
-      return;
-    }
+    if (isFirstRun.current) { isFirstRun.current = false; return; }
     const nextParams = {};
     if (search) nextParams.search = search;
     if (sort) nextParams.sort = sort;
@@ -47,9 +44,9 @@ export default function AllDates() {
 
   return (
     <div className="space-y-8">
-        <div className="rounded-3xl bg-white p-4 shadow-card md:p-6">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <h1 className="text-2xl font-semibold text-vault-ink">All dates</h1>
+      <div className="romantic-card p-4 md:p-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <h1 className="text-2xl font-semibold text-vault-ink">All dates 💕</h1>
           <div className="flex flex-col gap-3 md:flex-row md:flex-wrap">
             <div className="w-full md:min-w-[240px] md:w-auto">
               <SearchBar value={search} onChange={setSearch} />
@@ -60,6 +57,7 @@ export default function AllDates() {
       </div>
 
       {isLoading && <SkeletonGrid count={6} />}
+
       {!isLoading && hasResults && (
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {data.content.map((memory) => (
@@ -67,9 +65,10 @@ export default function AllDates() {
           ))}
         </div>
       )}
+
       {!isLoading && !hasResults && (
-        <div className="rounded-2xl bg-white px-6 py-8 text-sm text-slate-500 shadow-soft">
-          No memories yet. Try logging a new date or adjust your search.
+        <div className="romantic-card px-6 py-8 text-center text-sm text-vault-muted">
+          No memories yet. Try logging a new date or adjust your search 💭
         </div>
       )}
 
@@ -78,6 +77,7 @@ export default function AllDates() {
         totalPages={data?.totalPages || 0}
         onPageChange={handlePageChange}
       />
+
       {selected && <MemoryModal memory={selected} onClose={() => setSelected(null)} />}
     </div>
   );

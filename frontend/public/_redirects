@@ -1,0 +1,2 @@
+# Netlify SPA fallback – all routes serve index.html so React Router works on refresh/direct open
+/*    /index.html    200

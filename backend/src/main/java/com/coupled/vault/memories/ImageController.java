@@ -1,12 +1,10 @@
-﻿package com.coupled.vault.memories;
+package com.coupled.vault.memories;
 
-import java.util.UUID;
 import com.coupled.vault.common.ApiException;
 import com.coupled.vault.security.JwtUtil;
 import io.jsonwebtoken.Claims;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,21 +25,20 @@ public class ImageController {
   }
 
   @GetMapping("/{imageId}")
-  public ResponseEntity<byte[]> getImage(@PathVariable UUID imageId, @RequestParam(value = "token", required = false) String token) {
-    ImageService.ImagePayload payload;
+  public ResponseEntity<Void> getImage(
+      @PathVariable UUID imageId,
+      @RequestParam(value = "token", required = false) String token
+  ) {
+    String url;
     if (token != null && !token.isBlank()) {
       Claims claims = jwtUtil.parseClaims(token);
       String coupleIdRaw = claims.get("coupleId", String.class);
-      if (coupleIdRaw == null) {
-        throw new ApiException(HttpStatus.FORBIDDEN, "Not allowed");
-      }
-      payload = imageService.downloadWithCoupleId(imageId, UUID.fromString(coupleIdRaw));
+      if (coupleIdRaw == null) throw new ApiException(HttpStatus.FORBIDDEN, "Not allowed");
+      url = imageService.getImageUrl(imageId, UUID.fromString(coupleIdRaw));
     } else {
-      payload = imageService.download(imageId);
+      url = imageService.getImageUrl(imageId);
     }
-    return ResponseEntity.ok()
-        .contentType(MediaType.parseMediaType(payload.contentType()))
-        .body(payload.bytes());
+    return ResponseEntity.status(HttpStatus.FOUND).header("Location", url).build();
   }
 
   @DeleteMapping("/{imageId}")

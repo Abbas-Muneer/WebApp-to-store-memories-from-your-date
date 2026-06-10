@@ -1,10 +1,10 @@
-﻿package com.coupled.vault.memories;
+package com.coupled.vault.memories;
 
 import com.coupled.vault.auth.User;
 import com.coupled.vault.auth.UserRepository;
 import com.coupled.vault.common.ApiException;
 import com.coupled.vault.couple.Couple;
-import com.coupled.vault.files.FileStorageService;
+import com.coupled.vault.files.CloudinaryStorageService;
 import com.coupled.vault.security.SecurityUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,19 +19,20 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ImageService {
   private static final Logger log = LoggerFactory.getLogger(ImageService.class);
+
   private final DateMemoryRepository memoryRepository;
   private final DateImageRepository imageRepository;
   private final UserRepository userRepository;
-  private final FileStorageService fileStorageService;
+  private final CloudinaryStorageService cloudinaryStorageService;
   private final int maxFiles;
 
   public ImageService(DateMemoryRepository memoryRepository, DateImageRepository imageRepository,
-                      UserRepository userRepository, FileStorageService fileStorageService,
+                      UserRepository userRepository, CloudinaryStorageService cloudinaryStorageService,
                       @Value("${app.uploads.max-files}") int maxFiles) {
     this.memoryRepository = memoryRepository;
     this.imageRepository = imageRepository;
     this.userRepository = userRepository;
-    this.fileStorageService = fileStorageService;
+    this.cloudinaryStorageService = cloudinaryStorageService;
     this.maxFiles = maxFiles;
   }
 
@@ -44,11 +45,9 @@ public class ImageService {
     if (!memory.getCouple().getId().equals(couple.getId())) {
       throw new ApiException(HttpStatus.FORBIDDEN, "Not allowed");
     }
-
     if (files == null || files.isEmpty()) {
       throw new ApiException(HttpStatus.BAD_REQUEST, "No files uploaded");
     }
-
     long existing = imageRepository.countByDateMemoryId(memoryId);
     if (existing + files.size() > maxFiles) {
       throw new ApiException(HttpStatus.BAD_REQUEST, "Maximum 5 images per memory");
@@ -56,19 +55,18 @@ public class ImageService {
 
     List<DateImageResponse> uploaded = new ArrayList<>();
     for (MultipartFile file : files) {
-      var stored = fileStorageService.store(couple.getId(), memoryId, file);
+      var result = cloudinaryStorageService.upload(couple.getId(), memoryId, file);
+
       DateImage image = new DateImage();
-      if (image.getId() == null) {
-        image.setId(UUID.randomUUID());
-      }
+      image.setId(UUID.randomUUID());
       image.setDateMemory(memory);
       image.setCouple(couple);
-      image.setOriginalFilename(stored.originalFilename());
-      image.setStoredFilename(stored.storedFilename());
-      image.setStoragePath(stored.path());
-      image.setMimeType(stored.mimeType());
-      image.setSizeBytes(stored.size());
-      image.setUrl("/api/images/" + image.getId());
+      image.setOriginalFilename(result.originalFilename());
+      image.setStoredFilename(result.originalFilename());
+      image.setStoragePath(result.publicId());   // public_id used for deletion
+      image.setMimeType(result.mimeType());
+      image.setSizeBytes(result.size());
+      image.setUrl(result.secureUrl());           // direct Cloudinary URL
       imageRepository.save(image);
 
       DateImageResponse response = new DateImageResponse();
@@ -85,39 +83,37 @@ public class ImageService {
     return response;
   }
 
-  public ImagePayload download(UUID imageId) {
+  /** Returns the direct image URL (Cloudinary), auth-checked for the current user's couple. */
+  public String getImageUrl(UUID imageId) {
     User user = getCurrentUser();
     Couple couple = requireCouple(user);
-
     DateImage image = imageRepository.findById(imageId)
         .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Image not found"));
     if (image.getCouple() == null || !image.getCouple().getId().equals(couple.getId())) {
       throw new ApiException(HttpStatus.FORBIDDEN, "Not allowed");
     }
-    byte[] bytes = fileStorageService.readFile(image.getStoragePath());
-    return new ImagePayload(bytes, image.getMimeType());
+    return image.getUrl();
   }
 
-  public ImagePayload downloadWithCoupleId(UUID imageId, UUID coupleId) {
+  /** Returns the direct image URL, couple-id-checked (used for token-based shared access). */
+  public String getImageUrl(UUID imageId, UUID coupleId) {
     DateImage image = imageRepository.findById(imageId)
         .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Image not found"));
     if (image.getCouple() == null || !image.getCouple().getId().equals(coupleId)) {
       throw new ApiException(HttpStatus.FORBIDDEN, "Not allowed");
     }
-    byte[] bytes = fileStorageService.readFile(image.getStoragePath());
-    return new ImagePayload(bytes, image.getMimeType());
+    return image.getUrl();
   }
 
   public void deleteImage(UUID imageId) {
     User user = getCurrentUser();
     Couple couple = requireCouple(user);
-
     DateImage image = imageRepository.findById(imageId)
         .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Image not found"));
     if (image.getCouple() == null || !image.getCouple().getId().equals(couple.getId())) {
       throw new ApiException(HttpStatus.FORBIDDEN, "Not allowed");
     }
-    fileStorageService.deleteFile(image.getStoragePath());
+    cloudinaryStorageService.delete(image.getStoragePath());
     imageRepository.delete(image);
     log.info("Deleted image {} couple {}", imageId, couple.getId());
   }
@@ -125,7 +121,7 @@ public class ImageService {
   public void deleteAllForMemory(DateMemory memory, Couple couple) {
     List<DateImage> images = imageRepository.findByDateMemoryId(memory.getId());
     for (DateImage image : images) {
-      fileStorageService.deleteFile(image.getStoragePath());
+      cloudinaryStorageService.delete(image.getStoragePath());
       imageRepository.delete(image);
     }
   }
@@ -143,6 +139,4 @@ public class ImageService {
     }
     return user.getCouple();
   }
-
-  public record ImagePayload(byte[] bytes, String contentType) {}
 }

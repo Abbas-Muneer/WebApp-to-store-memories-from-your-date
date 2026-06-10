@@ -1,2 +1,1 @@
-# WebApp-to-store-memories-from-your-date
-WebApp to store memories from your date with your partner, invite your partner through mail, log in your images, feedback, names of the place you went and your rating.  A walk through memories 
+﻿We value code clarity and understanding of the Spring Boot ecosystem. Please be prepared to discuss your choice of modules, dependencies, and logic during the next stage. We prioritize candidates who can explain why they wrote the code a certain way.

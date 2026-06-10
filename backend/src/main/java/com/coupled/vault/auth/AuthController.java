@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.auth;
+package com.coupled.vault.auth;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

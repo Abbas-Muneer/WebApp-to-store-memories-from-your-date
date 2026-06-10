@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.invite;
+package com.coupled.vault.invite;
 
 import com.coupled.vault.couple.Couple;
 import java.time.Instant;

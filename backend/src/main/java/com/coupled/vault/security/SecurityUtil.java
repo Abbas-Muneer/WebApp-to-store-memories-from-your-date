@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.security;
+package com.coupled.vault.security;
 
 import java.util.Optional;
 import org.springframework.security.core.Authentication;

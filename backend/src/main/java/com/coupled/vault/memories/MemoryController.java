@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.memories;
+package com.coupled.vault.memories;
 
 import jakarta.validation.Valid;
 import java.util.List;

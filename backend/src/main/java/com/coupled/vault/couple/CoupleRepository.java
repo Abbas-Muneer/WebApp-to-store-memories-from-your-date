@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.couple;
+package com.coupled.vault.couple;
 
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.common;
+package com.coupled.vault.common;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;

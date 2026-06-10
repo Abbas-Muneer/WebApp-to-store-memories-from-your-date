@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.memories;
+package com.coupled.vault.memories;
 
 import java.util.List;
 

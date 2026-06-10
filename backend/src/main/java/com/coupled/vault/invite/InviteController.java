@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.invite;
+package com.coupled.vault.invite;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.memories;
+package com.coupled.vault.memories;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

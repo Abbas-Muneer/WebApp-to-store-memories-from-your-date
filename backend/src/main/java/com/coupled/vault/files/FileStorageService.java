@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.files;
+package com.coupled.vault.files;
 
 import com.coupled.vault.common.ApiException;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.security;
+package com.coupled.vault.security;
 
 import java.util.UUID;
 

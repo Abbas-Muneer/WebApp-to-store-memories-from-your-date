@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.security;
+package com.coupled.vault.security;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;

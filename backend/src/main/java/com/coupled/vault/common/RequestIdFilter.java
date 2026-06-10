@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.common;
+package com.coupled.vault.common;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

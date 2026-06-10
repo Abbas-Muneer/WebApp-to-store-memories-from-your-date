@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.invite;
+package com.coupled.vault.invite;
 
 public enum InviteStatus {
   PENDING,

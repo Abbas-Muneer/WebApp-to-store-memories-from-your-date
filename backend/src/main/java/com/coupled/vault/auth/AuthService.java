@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.auth;
+package com.coupled.vault.auth;
 
 import com.coupled.vault.common.ApiException;
 import com.coupled.vault.couple.Couple;

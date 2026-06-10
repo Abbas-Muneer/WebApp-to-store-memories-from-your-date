@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.auth;
+package com.coupled.vault.auth;
 
 public class AuthResponse {
   private String token;

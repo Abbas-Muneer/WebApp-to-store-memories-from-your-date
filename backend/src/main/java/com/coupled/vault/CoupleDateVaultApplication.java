@@ -1,4 +1,4 @@
-﻿package com.coupled.vault;
+package com.coupled.vault;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

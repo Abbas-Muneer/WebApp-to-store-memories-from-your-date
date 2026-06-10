@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.common;
+package com.coupled.vault.common;
 
 public class MaskingUtil {
   private MaskingUtil() {}

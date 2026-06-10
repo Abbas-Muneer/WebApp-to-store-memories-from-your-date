@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.profile;
+package com.coupled.vault.profile;
 
 import java.util.UUID;
 

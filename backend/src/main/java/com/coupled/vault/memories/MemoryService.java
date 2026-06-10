@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.memories;
+package com.coupled.vault.memories;
 
 import com.coupled.vault.auth.User;
 import com.coupled.vault.auth.UserRepository;

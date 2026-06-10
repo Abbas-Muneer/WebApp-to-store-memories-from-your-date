@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.auth;
+package com.coupled.vault.auth;
 
 import java.util.List;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,4 +1,4 @@
-﻿package com.coupled.vault.couple;
+package com.coupled.vault.couple;
 
 import com.coupled.vault.auth.User;
 import jakarta.persistence.Column;

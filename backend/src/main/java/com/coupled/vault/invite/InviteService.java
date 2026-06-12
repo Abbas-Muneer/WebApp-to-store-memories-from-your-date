@@ -89,6 +89,7 @@ public class InviteService {
     response.setStatus(invite.getStatus().name());
     response.setPartnerEmailMasked(MaskingUtil.maskEmail(invite.getPartnerEmail()));
     response.setExpiresAt(invite.getExpiresAt());
+    response.setInviteLink(inviteLink);
 
     log.info("Invite created for {} by user {}", MaskingUtil.maskEmail(invite.getPartnerEmail()), user.getEmail());
     return response;
@@ -116,6 +117,7 @@ public class InviteService {
           InviteStatusResponse.PendingInvite pending = new InviteStatusResponse.PendingInvite();
           pending.setPartnerEmailMasked(MaskingUtil.maskEmail(invite.getPartnerEmail()));
           pending.setExpiresAt(invite.getExpiresAt());
+          pending.setInviteLink(inviteBaseUrl + invite.getToken());
           response.setPendingInvite(pending);
         });
 

@@ -34,6 +34,7 @@ public class InviteStatusResponse {
   public static class PendingInvite {
     private String partnerEmailMasked;
     private Instant expiresAt;
+    private String inviteLink;
 
     public String getPartnerEmailMasked() {
       return partnerEmailMasked;
@@ -49,6 +50,14 @@ public class InviteStatusResponse {
 
     public void setExpiresAt(Instant expiresAt) {
       this.expiresAt = expiresAt;
+    }
+
+    public String getInviteLink() {
+      return inviteLink;
+    }
+
+    public void setInviteLink(String inviteLink) {
+      this.inviteLink = inviteLink;
     }
   }
 }

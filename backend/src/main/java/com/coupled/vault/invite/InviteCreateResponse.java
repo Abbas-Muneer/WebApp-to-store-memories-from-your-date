@@ -6,6 +6,7 @@ public class InviteCreateResponse {
   private String status;
   private String partnerEmailMasked;
   private Instant expiresAt;
+  private String inviteLink;
 
   public String getStatus() {
     return status;
@@ -29,5 +30,13 @@ public class InviteCreateResponse {
 
   public void setExpiresAt(Instant expiresAt) {
     this.expiresAt = expiresAt;
+  }
+
+  public String getInviteLink() {
+    return inviteLink;
+  }
+
+  public void setInviteLink(String inviteLink) {
+    this.inviteLink = inviteLink;
   }
 }

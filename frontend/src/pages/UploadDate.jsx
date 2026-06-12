@@ -8,6 +8,7 @@ export default function UploadDate() {
   const { addToast } = useToast();
   const [form, setForm] = useState({ dateOfDate: '', restaurantName: '', rating: 5, feedback: '' });
   const [files, setFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -18,10 +19,23 @@ export default function UploadDate() {
 
   const handleFiles = (e) => {
     const incoming = Array.from(e.target.files || []);
-    setFiles((prev) => [...prev, ...incoming].slice(0, 5));
+    const combined = [...files, ...incoming].slice(0, 5);
+    setFiles(combined);
+    const readers = combined.map((file) =>
+      new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => resolve(ev.target.result);
+        reader.readAsDataURL(file);
+      })
+    );
+    Promise.all(readers).then(setPreviews);
   };
 
-  const removeFile = (index) => setFiles((prev) => prev.filter((_, i) => i !== index));
+  const removeFile = (index) => {
+    const updated = files.filter((_, i) => i !== index);
+    setFiles(updated);
+    setPreviews((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -119,15 +133,15 @@ export default function UploadDate() {
             />
           </div>
 
-          {files.length > 0 && (
+          {previews.length > 0 && (
             <div>
               <div className="text-sm font-medium text-vault-muted">Previews</div>
               <div className="mt-3 flex flex-wrap gap-3">
-                {files.map((file, index) => (
-                  <div key={file.name + index} className="relative">
+                {previews.map((src, index) => (
+                  <div key={index} className="relative">
                     <img
-                      src={URL.createObjectURL(file)}
-                      alt={file.name}
+                      src={src}
+                      alt={`preview ${index + 1}`}
                       className="h-20 w-20 rounded-xl object-cover shadow-soft"
                     />
                     <button

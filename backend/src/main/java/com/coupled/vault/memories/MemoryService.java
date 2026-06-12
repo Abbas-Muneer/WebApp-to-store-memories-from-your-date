@@ -4,6 +4,7 @@ import com.coupled.vault.auth.User;
 import com.coupled.vault.auth.UserRepository;
 import com.coupled.vault.common.ApiException;
 import com.coupled.vault.couple.Couple;
+import com.coupled.vault.couple.CoupleService;
 import com.coupled.vault.security.SecurityUtil;
 import java.time.Instant;
 import java.util.List;
@@ -24,13 +25,15 @@ public class MemoryService {
   private final DateImageRepository imageRepository;
   private final UserRepository userRepository;
   private final ImageService imageService;
+  private final CoupleService coupleService;
 
   public MemoryService(DateMemoryRepository memoryRepository, DateImageRepository imageRepository,
-                       UserRepository userRepository, ImageService imageService) {
+                       UserRepository userRepository, ImageService imageService, CoupleService coupleService) {
     this.memoryRepository = memoryRepository;
     this.imageRepository = imageRepository;
     this.userRepository = userRepository;
     this.imageService = imageService;
+    this.coupleService = coupleService;
   }
 
   public MemoryCreateResponse create(MemoryCreateRequest request) {
@@ -149,7 +152,9 @@ public class MemoryService {
 
   private Couple requireCouple(User user) {
     if (user.getCouple() == null) {
-      throw new ApiException(HttpStatus.BAD_REQUEST, "Invite your partner to create your couple vault first");
+      Couple couple = coupleService.createCouple(user);
+      user.setCouple(couple);
+      userRepository.save(user);
     }
     return user.getCouple();
   }

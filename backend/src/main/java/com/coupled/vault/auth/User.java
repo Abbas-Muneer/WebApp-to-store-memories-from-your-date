@@ -17,7 +17,6 @@ import org.hibernate.annotations.UuidGenerator;
 public class User {
   @Id
   @UuidGenerator
-  @Column(columnDefinition = "CHAR(36)")
   private UUID id;
 
   @Column(nullable = false, length = 120)

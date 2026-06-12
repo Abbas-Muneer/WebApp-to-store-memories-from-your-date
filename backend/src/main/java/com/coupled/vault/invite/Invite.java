@@ -19,7 +19,6 @@ import org.hibernate.annotations.UuidGenerator;
 public class Invite {
   @Id
   @UuidGenerator
-  @Column(columnDefinition = "CHAR(36)")
   private UUID id;
 
   @ManyToOne(fetch = FetchType.LAZY)

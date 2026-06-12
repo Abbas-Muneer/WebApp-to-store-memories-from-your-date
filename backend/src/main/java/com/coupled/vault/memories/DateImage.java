@@ -16,7 +16,6 @@ import java.util.UUID;
 @Table(name = "date_images")
 public class DateImage {
   @Id
-  @Column(columnDefinition = "CHAR(36)")
   private UUID id;
 
   @ManyToOne(fetch = FetchType.LAZY)

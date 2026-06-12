@@ -17,7 +17,6 @@ import org.hibernate.annotations.UuidGenerator;
 public class Couple {
   @Id
   @UuidGenerator
-  @Column(columnDefinition = "CHAR(36)")
   private UUID id;
 
   @OneToOne(fetch = FetchType.LAZY)
